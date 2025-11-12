@@ -24,22 +24,6 @@ docker compose up -d                # стартуем все сервисы
 
 `vendor` и `bootstrap/cache` живут в именованных volume (`vendor-data`, `cache-data`), поэтому при любом изменении окружения, которое удаляет volume, зависимости нужно класть заново:
 
-```bash
-docker compose down -v              # полностью пересобрать окружение
-docker compose build app            # пересобираем образ
-docker compose run --rm app composer install
-docker compose up -d
-```
-
-Если удалить `vendor` на хосте, нужно снова выполнить `docker compose run --rm app composer install`, потому что фактические файлы находятся внутри volume.
-
-> ⚠️ На macOS Docker Desktop автоматически использует VirtioFS для шаринга каталогов.  
-> Для PHP‑проекта с большим количеством мелких файлов это может приводить к ошибкам вида  
-> `Resource deadlock avoided`. В docker-compose включён режим `consistency: delegated`,  
-> который смягчает проблему. При систематических ошибках переключите Docker Desktop на gRPC-FUSE  
-> (Settings → Resources → File Sharing → Advanced → gRPC-FUSE) и перезапустите контейнеры.
-Приложение будет доступно по адресу http://localhost:8080.
-
 ## Полезные команды
 - `docker compose exec app php artisan migrate` – выполнить миграции.
 - `docker compose exec app php artisan test` – прогнать тесты.
