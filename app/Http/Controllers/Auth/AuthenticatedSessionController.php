@@ -5,12 +5,17 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
 class AuthenticatedSessionController extends Controller
 {
+    public function __construct(
+        private readonly StatefulGuard $guard,
+    ) {
+    }
+
     public function create()
     {
         return view('auth.login');
@@ -25,7 +30,7 @@ class AuthenticatedSessionController extends Controller
 
         $remember = $request->boolean('remember');
 
-        if (!Auth::attempt($credentials, $remember)) {
+        if (!$this->guard->attempt($credentials, $remember)) {
             throw ValidationException::withMessages([
                 'email' => __('Неверный логин или пароль.'),
             ]);
@@ -38,7 +43,7 @@ class AuthenticatedSessionController extends Controller
 
     public function destroy(Request $request)
     {
-        Auth::guard('web')->logout();
+        $this->guard->logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();

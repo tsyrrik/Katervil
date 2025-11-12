@@ -35,7 +35,7 @@ class ProductionController extends Controller
 
         $items = $query->get();
 
-        $employees = Employee::orderBy('name')->get();
+        $employees = Employee::query()->orderBy('name')->get();
 
         return view('production.index', [
             'items' => $items,
