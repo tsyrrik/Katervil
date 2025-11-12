@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -10,7 +12,12 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory;
+
+    use Notifiable;
+
+    public const ROLE_SUPERVISOR = 'supervisor';
+    public const ROLE_WORKER = 'worker';
 
     /**
      * The attributes that are mass assignable.
@@ -21,6 +28,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -32,6 +40,16 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function isSupervisor(): bool
+    {
+        return $this->role === self::ROLE_SUPERVISOR;
+    }
+
+    public function getRoleLabelAttribute(): string
+    {
+        return $this->isSupervisor() ? 'Начальник смены' : 'Сотрудник';
+    }
 
     /**
      * Get the attributes that should be cast.

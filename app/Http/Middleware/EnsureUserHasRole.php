@@ -1,0 +1,31 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+use function count;
+use function in_array;
+
+class EnsureUserHasRole
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  Closure(Request): (Response)  $next
+     */
+    public function handle(Request $request, Closure $next, string ...$roles): Response
+    {
+        $user = $request->user();
+
+        if (!$user || (count($roles) && !in_array($user->role, $roles, true))) {
+            abort(403, 'Недостаточно прав для выполнения операции.');
+        }
+
+        return $next($request);
+    }
+}
