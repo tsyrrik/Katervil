@@ -1,4 +1,4 @@
-FROM php:8.4-rc-fpm
+FROM php:8.3-fpm
 
 ARG USER_ID=1000
 ARG GROUP_ID=1000
