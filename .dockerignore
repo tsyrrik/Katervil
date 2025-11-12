@@ -1,0 +1,13 @@
+.git
+.github
+.idea
+vendor
+node_modules
+storage/logs
+storage/framework/cache
+storage/framework/sessions
+storage/framework/views
+npm-debug.log
+yarn-error.log
+docker/php/vendor
+docker/php/node_modules
